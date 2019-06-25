@@ -13,7 +13,7 @@ class CalcDisplay(ttk.Frame):
         s = ttk.Style()
         s.configure("my.TLabel", font="Helvetica 40")
 
-        self.lblDisplay = ttk.Label(self, text="0", style="my.TLabel", anchor=E)
+        self.lblDisplay = ttk.Label(self, text="0", style="my.TLabel", anchor=E, foreground="white", background="black")
         self.lblDisplay.pack(fill=BOTH, expand=True)
 
 
