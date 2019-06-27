@@ -14,15 +14,23 @@ class CalcDisplay(ttk.Frame):
         self.pack_propagate(0)
 
         s = ttk.Style()
-        s.configure("my.TLabel", font="Helvetica 40")
+        s.configure("my.TLabel", font="Helvetica 34")
 
         self.lblDisplay = ttk.Label(self, text=self._value, style="my.TLabel", anchor=E, foreground="white", background="black")
         self.lblDisplay.pack(fill=BOTH, expand=True)
 
     def addDigit(self, digito):
-        if len(self._value) ==10:
+        if self._value[0] != "-" and len(self._value) >=10 or len(self._value) >=11:      
             return
+        '''    
+        if self._value[0] == "-":
+            longmax = 11
+        else:
+             longmax = 10
 
+        if len(self._value) >= longmax:
+            return
+        '''
         if self._value == "0":
             self._value = digito
         else:
@@ -72,7 +80,7 @@ class Calculator(ttk.Frame):
     _op1 = None
     _op2 = None
     _operador = None
-
+    
     def __init__(self, parent, **kwargs):
         ttk.Frame.__init__(self, parent, height=kwargs['height'], width=kwargs['width'])
         self.display = CalcDisplay(self)
@@ -80,15 +88,15 @@ class Calculator(ttk.Frame):
         CalcButton(self, text='C', command=self.display.reset).grid(column=0, row=1)
         CalcButton(self, text='+/-', command=self.display.signo).grid(column=1, row=1)
         CalcButton(self, text='%', command=None).grid(column=2, row=1)
-        CalcButton(self, text='÷', command=None).grid(column=3, row=1)
+        CalcButton(self, text='÷', command=lambda: self.opera("/")).grid(column=3, row=1)
         CalcButton(self, text='7', command=lambda: self.display.addDigit('7')).grid(column=0, row=2)
         CalcButton(self, text='8', command=lambda: self.display.addDigit('8')).grid(column=1, row=2)
         CalcButton(self, text='9', command=lambda: self.display.addDigit('9')).grid(column=2, row=2)
-        CalcButton(self, text='x', command=None).grid(column=3, row=2)
+        CalcButton(self, text='x', command=lambda: self.opera("*")).grid(column=3, row=2)
         CalcButton(self, text='4', command=lambda: self.display.addDigit('4')).grid(column=0, row=3)
         CalcButton(self, text='5', command=lambda: self.display.addDigit('5')).grid(column=1, row=3)
         CalcButton(self, text='6', command=lambda: self.display.addDigit('6')).grid(column=2, row=3)
-        CalcButton(self, text='-', command=None).grid(column=3, row=3)
+        CalcButton(self, text='-', command=lambda: self.opera("-")).grid(column=3, row=3)
         CalcButton(self, text='1', command=lambda: self.display.addDigit('1')).grid(column=0, row=4)
         CalcButton(self, text='2', command=lambda: self.display.addDigit('2')).grid(column=1, row=4)
         CalcButton(self, text='3', command=lambda: self.display.addDigit('3')).grid(column=2, row=4)
@@ -112,6 +120,7 @@ class Calculator(ttk.Frame):
                 resultado = self._op1 * self._op2
             else:
                 resultado = self._op1 / self._op2
+            
 
             self._op1 = resultado
             self._operador = operador
@@ -119,18 +128,21 @@ class Calculator(ttk.Frame):
             self.display._value = resultado
             self.display.pintar()
 
+
+    
 class MainApp(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title("Calculator")
         self.geometry("{}x{}".format(_widthBtn*4, _heightBtn*6))
 
-        self.calculator = Calculator(self, height=300, width=272)
-        self.calculator.place(x=0, y=0)
+        self.calculator = Calculator(self, height=_heightBtn*6, width=_widthBtn*4)
+        self.calculator.place(x=0, y=0)  
 
     def start(self):
         self.mainloop()
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     app = MainApp()
     app.start()
